@@ -1266,7 +1266,7 @@ class MugDesigner {
   async loadMug() {
     const loader = new GLTFLoader()
     try {
-      const mugUrl = "images/mug.glb"
+      const mugUrl = "mug.glb"
 
       const gltf = await new Promise((resolve, reject) => {
         loader.load(mugUrl, resolve, undefined, reject)
@@ -2279,4 +2279,5 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("[v0] PrintCraft Studio fully initialized - 3D model, canvas, UI, and all features active")
 
 })
+
 
