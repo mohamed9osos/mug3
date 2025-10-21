@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrintCraft Studio - Premium Mug Designer</title>
+    <link rel="stylesheet" href="designer.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Added loading screen animation -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-container">
+            <div class="loading-logo">
+                <i class="fas fa-palette"></i>
+            </div>
+            <h2>PrintCraft Studio</h2>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+            <p>Initializing your design workspace...</p>
+        </div>
+    </div>
+
+    <!-- Added toast notification container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Added auto-save indicator -->
+    <div id="autoSaveIndicator" class="auto-save-indicator">
+        <i class="fas fa-cloud"></i>
+        <span id="autoSaveText">All changes saved</span>
+    </div>
+
+    <!-- Warning Modal -->
+    <div id="warningModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="modal-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <p id="warningMessage">⚠ Image exceeds the allowed area</p>
+        </div>
+    </div>
+
+    <!-- Added AI Processing Modal -->
+    <div id="aiProcessingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <i class="fas fa-robot"></i>
+            </div>
+            <p id="aiProcessingMessage">AI is processing your request...</p>
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
+    <!-- Added Export Options Modal -->
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="modal-icon">
+                <i class="fas fa-download"></i>
+            </div>
+            <h3>Export Options</h3>
+            <div class="export-options">
+                <button id="exportPNG" class="btn-primary full-width">
+                    <i class="fas fa-image"></i> High-Res PNG (300 DPI)
+                </button>
+                <button id="exportPDF" class="btn-primary full-width">
+                    <i class="fas fa-file-pdf"></i> Print-Ready PDF
+                </button>
+                <button id="exportJSON" class="btn-secondary full-width">
+                    <i class="fas fa-code"></i> Design Data (JSON)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-palette"></i>
+                <span>PrintCraft Studio</span>
+            </div>
+            <div class="header-actions">
+                <!-- Added accent color picker button in header -->
+                <button id="accentColorToggle" class="btn-secondary" title="Change Accent Color">
+                    <i class="fas fa-swatchbook"></i>
+                    Theme
+                </button>
+                <button id="versionsBtn" class="btn-secondary">
+                    <i class="fas fa-history"></i>
+                    Versions
+                </button>
+                <button id="collaborateBtn" class="btn-secondary">
+                    <i class="fas fa-users"></i>
+                    Share
+                </button>
+                <button class="btn-secondary">
+                    <i class="fas fa-save"></i>
+                    Save
+                </button>
+                <button id="exportToggle" class="btn-primary">
+                    <i class="fas fa-download"></i>
+                    Export Design
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Added accent color picker panel with vibrant color options -->
+
+    <div class="accent-color-panel" id="accentColorPanel">
+        <div class="panel-header">
+            <h3><i class="fas fa-swatchbook"></i> Accent Colors</h3>
+            <button class="panel-close">&times;</button>
+        </div>
+        <div class="panel-content">
+            <p class="color-picker-label">Select a vibrant accent color:</p>
+            <div class="accent-color-grid">
+                <div class="accent-color-option" data-color="#2563eb" style="background: #2563eb;" title="Ocean Blue">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+                <div class="accent-color-option" data-color="#0ea5e9" style="background: #0ea5e9;" title="Sky Blue">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+                <div class="accent-color-option" data-color="#06b6d4" style="background: #06b6d4;" title="Cyan">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+                <div class="accent-color-option" data-color="#10b981" style="background: #10b981;" title="Emerald">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+                <div class="accent-color-option" data-color="#8b5cf6" style="background: #8b5cf6;" title="Violet">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+                <div class="accent-color-option" data-color="#ec4899" style="background: #ec4899;" title="Pink">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+                <div class="accent-color-option" data-color="#f43f5e" style="background: #f43f5e;" title="Rose">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+                <div class="accent-color-option" data-color="#f97316" style="background: #f97316;" title="Orange">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+                <div class="accent-color-option" data-color="#eab308" style="background: #eab308;" title="Amber">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+                <div class="accent-color-option" data-color="#14b8a6" style="background: #14b8a6;" title="Teal">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+                <div class="accent-color-option" data-color="#06d6a0" style="background: #06d6a0;" title="Turquoise">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+                <div class="accent-color-option" data-color="#d946ef" style="background: #d946ef;" title="Fuchsia">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+
+                <div class="color-separator">Gradients</div>
+                <div class="accent-color-option gradient-option" data-color="linear-gradient(45deg, #ff0844, #ffb199)"
+                    style="background: linear-gradient(45deg, #ff0844, #ffb199);" title="Crimson Heat">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+
+                <div class="accent-color-option gradient-option" data-color="linear-gradient(45deg, #00c6ff, #0072ff)"
+                    style="background: linear-gradient(45deg, #00c6ff, #0072ff);" title="Deep Ocean">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+
+                <div class="accent-color-option gradient-option" data-color="linear-gradient(45deg, #43e97b, #38f9d7)"
+                    style="background: linear-gradient(45deg, #43e97b, #38f9d7);" title="Emerald Flow">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+
+                <div class="accent-color-option gradient-option" data-color="linear-gradient(45deg, #fc00ff, #00dbde)"
+                    style="background: linear-gradient(45deg, #fc00ff, #00dbde);" title="Neon Fusion">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+
+                <div class="accent-color-option gradient-option" data-color="linear-gradient(45deg, #f7971e, #ffd200)"
+                    style="background: linear-gradient(45deg, #f7971e, #ffd200);" title="Golden Energy">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+
+                <div class="accent-color-option gradient-option" data-color="linear-gradient(45deg, #834d9b, #d04ed6)"
+                    style="background: linear-gradient(45deg, #834d9b, #d04ed6);" title="Violet Storm">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+
+                <div class="accent-color-option gradient-option" data-color="linear-gradient(45deg, #11998e, #38ef7d)"
+                    style="background: linear-gradient(45deg, #11998e, #38ef7d);" title="Jungle Pulse">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+
+                <div class="accent-color-option gradient-option" data-color="linear-gradient(45deg, #ff512f, #dd2476)"
+                    style="background: linear-gradient(45deg, #ff512f, #dd2476);" title="Rose Inferno">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+                <div class="accent-color-option gradient-option" data-color="linear-gradient(45deg, #232526, #414345)"
+                    style="background: linear-gradient(45deg, #232526, #414345);" title="Steel Shadow">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+
+                <div class="accent-color-option gradient-option" data-color="linear-gradient(45deg, #434343, #000000)"
+                    style="background: linear-gradient(45deg, #434343, #000000);" title="Onyx Depth">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+
+                <div class="accent-color-option gradient-option"
+                    data-color="linear-gradient(45deg, #3a1c71, #d76d77, #ffaf7b)"
+                    style="background: linear-gradient(45deg, #3a1c71, #d76d77, #ffaf7b);" title="Royal Velvet">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+
+                <div class="accent-color-option gradient-option" data-color="linear-gradient(45deg, #141e30, #243b55)"
+                    style="background: linear-gradient(45deg, #141e30, #243b55);" title="Midnight Blue">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+
+                <div class="accent-color-option gradient-option" data-color="linear-gradient(45deg, #8360c3, #2ebf91)"
+                    style="background: linear-gradient(45deg, #8360c3, #2ebf91);" title="Royal Emerald">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+
+                <div class="accent-color-option gradient-option" data-color="linear-gradient(45deg, #4e4376, #2b5876)"
+                    style="background: linear-gradient(45deg, #4e4376, #2b5876);" title="Sapphire Smoke">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+
+                <div class="accent-color-option gradient-option" data-color="linear-gradient(45deg, #373b44, #4286f4)"
+                    style="background: linear-gradient(45deg, #373b44, #4286f4);" title="Chrome Blue">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+                <div class="accent-color-option gradient-option" data-color="linear-gradient(45deg, #00f5a0, #00d9f5)"
+                    style="background: linear-gradient(45deg, #00f5a0, #00d9f5);" title="Cyber Aqua">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+
+                <div class="accent-color-option gradient-option"
+                    data-color="linear-gradient(45deg, #f72585, #7209b7, #3a0ca3)"
+                    style="background: linear-gradient(45deg, #f72585, #7209b7, #3a0ca3);" title="Violet Pulse">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+
+                <div class="accent-color-option gradient-option" data-color="linear-gradient(45deg, #ff6a00, #ee0979)"
+                    style="background: linear-gradient(45deg, #ff6a00, #ee0979);" title="Electric Ember">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+
+                <div class="accent-color-option gradient-option" data-color="linear-gradient(45deg, #00f260, #0575e6)"
+                    style="background: linear-gradient(45deg, #00f260, #0575e6);" title="Neon Circuit">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+
+                <div class="accent-color-option gradient-option" data-color="linear-gradient(45deg, #ff0080, #7928ca)"
+                    style="background: linear-gradient(45deg, #ff0080, #7928ca);" title="Digital Dream">
+                    <span class="color-check"><i class="fas fa-check"></i></span>
+                </div>
+
+
+            </div>
+
+            <div class="color-preview">
+                <p>Current Accent:</p>
+                <div class="preview-box" id="accentPreview" style="background: #2563eb;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Floating Toolbar -->
+        <div class="floating-toolbar">
+            <div class="toolbar-section">
+                <button id="addTextBtn" class="tool-btn" title="Add Text">
+                    <i class="fas fa-font"></i>
+                </button>
+                <button id="addImageBtn" class="tool-btn" title="Upload Image">
+                    <i class="fas fa-image"></i>
+                </button>
+                <button class="tool-btn" id="patternsToggle" title="Patterns">
+                    <i class="fas fa-th"></i>
+                </button>
+                <button class="tool-btn" id="colorsToggle" title="Colors">
+                    <i class="fas fa-palette"></i>
+                </button>
+                <!-- Added AI features buttons -->
+                <button class="tool-btn" id="aiToggle" title="AI Features">
+                    <i class="fas fa-robot"></i>
+                </button>
+            </div>
+            <div class="toolbar-divider"></div>
+            <div class="toolbar-section">
+                <button id="undoBtn" class="tool-btn" title="Undo">
+                    <i class="fas fa-undo"></i>
+                </button>
+                <button id="redoBtn" class="tool-btn" title="Redo">
+                    <i class="fas fa-redo"></i>
+                </button>
+                <button id="resetBtn" class="tool-btn" title="Reset">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <button id="exportBtn" class="tool-btn tool-btn-primary" title="Export">
+                    <i class="fas fa-download"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Sidebar Panels -->
+        <div class="sidebar-panel" id="textPanel">
+            <div class="panel-header">
+                <h3><i class="fas fa-font"></i> Text Settings</h3>
+                <button class="panel-close">&times;</button>
+            </div>
+            <div class="panel-content">
+                <div class="input-group">
+                    <label>Text Content</label>
+                    <input type="text" id="textInput" placeholder="Enter your text here">
+                </div>
+                <div class="input-group">
+                    <label>Font Family</label>
+                    <select id="fontSelect">
+                        <option value="Inter">Inter</option>
+                        <option value="Arial">Arial</option>
+                        <option value="Helvetica">Helvetica</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Verdana">Verdana</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Font Style</label>
+                    <select id="fontStyleSelect">
+                        <option value="normal">Normal</option>
+                        <option value="bold">Bold</option>
+                        <option value="italic">Italic</option>
+                        <option value="bold italic">Bold Italic</option>
+                        <option value="outline">Outline</option>
+                    </select>
+                </div>
+                <!-- Added advanced text controls -->
+                <div class="input-group">
+                    <label>Letter Spacing (Kerning)</label>
+                    <input type="range" id="letterSpacing" min="-50" max="200" value="0" class="slider">
+                    <span id="letterSpacingValue">0</span>
+                </div>
+                <div class="input-group">
+                    <label>Baseline Offset</label>
+                    <input type="range" id="baselineOffset" min="-50" max="50" value="0" class="slider">
+                    <span id="baselineOffsetValue">0</span>
+                </div>
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="curvedText">
+                        <span class="checkmark"></span>
+                        Curved Text (Text on Path)
+                    </label>
+                </div>
+                <div class="input-group">
+                    <label>Text Color</label>
+                    <input type="color" id="colorPicker" value="#000000">
+                </div>
+                <button id="addTextConfirm" class="btn-primary full-width">Add Text</button>
+            </div>
+        </div>
+
+        <div class="sidebar-panel" id="imagePanel">
+            <div class="panel-header">
+                <h3><i class="fas fa-image"></i> Image Upload</h3>
+                <button class="panel-close">&times;</button>
+            </div>
+            <div class="panel-content">
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Drag & drop your image here</p>
+                    <span>or</span>
+                    <button class="btn-secondary">Browse Files</button>
+                </div>
+                <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                <!-- Added AI image processing options -->
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="removeBackground">
+                        <span class="checkmark"></span>
+                        AI Background Removal
+                    </label>
+                </div>
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="vectorizeImage">
+                        <span class="checkmark"></span>
+                        Vectorize Low-Res Image
+                    </label>
+                </div>
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="grayscaleFilter">
+                        <span class="checkmark"></span>
+                        Apply grayscale filter
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-panel" id="patternsPanel">
+            <div class="panel-header">
+                <h3><i class="fas fa-th"></i> Patterns And</h3>
+                <button class="panel-close">&times;</button>
+            </div>
+            <div class="panel-content">
+                <!-- Added pattern generator controls -->
+                <div class="input-group">
+                    <label>Pattern Size</label>
+                    <input type="range" id="patternSize" min="50" max="300" value="100" class="slider">
+                    <span id="patternSizeValue">100%</span>
+                </div>
+                <div class="input-group">
+                    <label>Pattern Rotation</label>
+                    <input type="range" id="patternRotation" min="0" max="360" value="0" class="slider">
+                    <span id="patternRotationValue">0°</span>
+                </div>
+                <div class="pattern-grid">
+                    <div class="pattern-item" data-full="pattern1-1306x800.png">
+                        <img src="pattern/1.jpg" alt="Pattern 0">
+                        <div class="pattern-overlay">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="pattern-item" data-full="pattern1-1306x800.png">
+                        <img src="pattern/2.jpg" alt="Pattern 0">
+                        <div class="pattern-overlay">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="pattern-item" data-full="pattern1-1306x800.png">
+                        <img src="pattern/3.jpg" alt="Pattern 0">
+                        <div class="pattern-overlay">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="pattern-item" data-full="pattern1-1306x800.png">
+                        <img src="pattern/4.jpg" alt="Pattern 0">
+                        <div class="pattern-overlay">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="pattern-item" data-full="pattern1-1306x800.png">
+                        <img src="pattern/5.jpg" alt="Pattern 0">
+                        <div class="pattern-overlay">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="pattern-item" data-full="pattern1-1306x800.png">
+                        <img src="pattern/6.jpg" alt="Pattern 0">
+                        <div class="pattern-overlay">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="pattern-item" data-full="pattern1-1306x800.png">
+                        <img src="pattern/7.jpg" alt="Pattern 0">
+                        <div class="pattern-overlay">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="pattern-item" data-full="pattern1-1306x800.png">
+                        <img src="pattern/8.jpg" alt="Pattern 0">
+                        <div class="pattern-overlay">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="pattern-item" data-full="pattern1-1306x800.png">
+                        <img src="pattern/9.jpg" alt="Pattern 0">
+                        <div class="pattern-overlay">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="pattern-item" data-full="pattern1-1306x800.png">
+                        <img src="pattern/10.jpg" alt="Pattern 0">
+                        <div class="pattern-overlay">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="pattern-item" data-full="pattern1-1306x800.png">
+                        <img src="pattern/11.jpg" alt="Pattern 0">
+                        <div class="pattern-overlay">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="pattern-item" data-full="pattern1-1306x800.png">
+                        <img src="pattern/12.jpg" alt="Pattern 0">
+                        <div class="pattern-overlay">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="pattern-item" data-full="pattern1-1306x800.png">
+                        <img src="pattern/13.jpg" alt="Pattern 0">
+                        <div class="pattern-overlay">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="pattern-item" data-full="pattern1-1306x800.png">
+                        <img src="pattern/14.jpg" alt="Pattern 0">
+                        <div class="pattern-overlay">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="pattern-item" data-full="pattern1-1306x800.png">
+                        <img src="pattern/15.jpg" alt="Pattern 0">
+                        <div class="pattern-overlay">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="pattern-item" data-full="pattern1-1306x800.png">
+                        <img src="pattern/16.jpg" alt="Pattern 0">
+                        <div class="pattern-overlay">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="pattern-item" data-full="pattern1-1306x800.png">
+                        <img src="pattern/17.jpg" alt="Pattern 0">
+                        <div class="pattern-overlay">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="pattern-item" data-full="pattern1-1306x800.png">
+                        <img src="pattern/18.jpg" alt="Pattern 0">
+                        <div class="pattern-overlay">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="pattern-item" data-full="pattern1-1306x800.png">
+                        <img src="pattern/19.jpg" alt="Pattern 0">
+                        <div class="pattern-overlay">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="pattern-item" data-full="pattern1-1306x800.png">
+                        <img src="pattern/20.jpg" alt="Pattern 0">
+                        <div class="pattern-overlay">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="pattern-controls">
+                    <button id="togglePatternBtn" class="btn-secondary full-width">
+                        <i class="fas fa-lock"></i>
+                        Enable Pattern Movement
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-panel" id="colorsPanel">
+            <div class="panel-header">
+                <h3><i class="fas fa-palette"></i> Mug Colors</h3>
+                <button class="panel-close">&times;</button>
+            </div>
+            <div class="panel-content">
+                <div class="color-grid">
+                    <div class="color-swatch" data-color="#FFFFFF" style="background: #FFFFFF" title="White"></div>
+                    <div class="color-swatch" data-color="#000000" style="background: #000000" title="Black"></div>
+                    <div class="color-swatch" data-color="#C0392B" style="background: #C0392B" title="Red"></div>
+                    <div class="color-swatch" data-color="#3498DB" style="background: #3498DB" title="Blue"></div>
+                    <div class="color-swatch" data-color="#27AE60" style="background: #27AE60" title="Green"></div>
+                    <div class="color-swatch" data-color="#8E44AD" style="background: #8E44AD" title="Purple"></div>
+                    <div class="color-swatch" data-color="#F1C40F" style="background: #F1C40F" title="Yellow"></div>
+                    <div class="color-swatch" data-color="#7F8C8D" style="background: #7F8C8D" title="Gray"></div>
+                    <div class="color-swatch" data-color="#FDE3A7" style="background: #FDE3A7" title="Light Yellow">
+                    </div>
+                    <div class="color-swatch" data-color="#A3D2F1" style="background: #A3D2F1" title="Light Blue"></div>
+                    <div class="color-swatch" data-color="#F1948A" style="background: #F1948A" title="Light Red"></div>
+                    <div class="color-swatch" data-color="#A9DFBF" style="background: #A9DFBF" title="Light Green">
+                    </div>
+                    <div class="color-swatch" data-color="#D5D8DC" style="background: #D5D8DC" title="Light Gray"></div>
+                    <div class="color-swatch" data-color="#D7BDE2" style="background: #D7BDE2" title="Light Purple">
+                    </div>
+                    <div class="color-swatch" data-color="#FFD700" style="background: #FFD700" title="Gold"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Added AI Features Panel -->
+        <div class="sidebar-panel" id="aiPanel">
+            <div class="panel-header">
+                <h3><i class="fas fa-robot"></i> AI Features</h3>
+                <button class="panel-close">&times;</button>
+            </div>
+            <div class="panel-content">
+                <div class="input-group">
+                    <label>Generate Image from Text</label>
+                    <textarea id="aiPrompt" placeholder="Describe the image you want to generate..."
+                        rows="3"></textarea>
+                    <button id="generateAIImage" class="btn-primary full-width">
+                        <i class="fas fa-magic"></i> Generate Image
+                    </button>
+                </div>
+                <div class="input-group">
+                    <label>Smart Color Suggestions</label>
+                    <button id="suggestColors" class="btn-secondary full-width">
+                        <i class="fas fa-palette"></i> Get Color Suggestions
+                    </button>
+                </div>
+                <div class="input-group">
+                    <label>Font Recommendations</label>
+                    <button id="suggestFonts" class="btn-secondary full-width">
+                        <i class="fas fa-font"></i> Get Font Suggestions
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workspace -->
+        <div class="workspace">
+            <div class="workspace-header">
+                <!-- <h2>Design Your Mug</h2>
+                <p>Create stunning designs with our premium 3D editor</p> -->
+                <!-- Added material controls -->
+                <div class="material-controls">
+                    <button id="glossyMaterial" class="material-btn active">Glossy</button>
+                    <button id="matteMaterial" class="material-btn">Matte</button>
+                    <button id="spotUVMaterial" class="material-btn">Spot UV</button>
+                </div>
+            </div>
+
+            <div class="design-container">
+                <div class="split-container">
+                    <div class="model-container">
+                        <div class="container-header">
+                            <h4><i class="fas fa-cube"></i> 3D Preview</h4>
+                            <!-- Added 3D rotation preview toggle -->
+                            <div class="canvas-controls">
+                                <button id="toggleAutoRotate" class="btn-sm" title="Toggle Auto-Rotate">
+                                    <i class="fas fa-sync-alt"></i> Auto-Rotate
+                                </button>
+                            </div>
+                        </div>
+                        <div id="modelViewer"></div>
+                    </div>
+
+                    <div class="splitter">
+                        <div class="splitter-handle">
+                            <i class="fas fa-grip-lines-vertical"></i>
+                        </div>
+                    </div>
+
+                    <div class="canvas-container">
+                        <div class="container-header">
+                            <h4><i class="fas fa-paint-brush"></i> Design Canvas</h4>
+                            <!-- Added safe zone toggle -->
+                            <div class="canvas-controls">
+                                <button id="toggleSafeZone" class="btn-sm">
+                                    <i class="fas fa-eye"></i> Safe Zone
+                                </button>
+                                <button id="toggleBleed" class="btn-sm">
+                                    <i class="fas fa-expand"></i> Bleed
+                                </button>
+                            </div>
+                        </div>
+                        <div class="canvas-wrapper">
+                            <canvas id="designCanvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Layers Panel -->
+            <div class="layers-container">
+                <div class="layers-header">
+                    <h4><i class="fas fa-layer-group"></i> Layers</h4>
+                    <!-- Added layer controls -->
+                    <div class="layer-controls">
+                        <button id="lockAllLayers" class="btn-sm" title="Lock All">
+                            <i class="fas fa-lock"></i>
+                        </button>
+                        <button id="unlockAllLayers" class="btn-sm" title="Unlock All">
+                            <i class="fas fa-unlock"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="layersPanel" class="layers-panel"></div>
+            </div>
+
+            <!-- Added Analytics Dashboard -->
+            <div class="analytics-container">
+                <div class="analytics-header">
+                    <h4><i class="fas fa-chart-bar"></i> Design Analytics</h4>
+                </div>
+                <div class="analytics-content">
+                    <div class="analytics-item">
+                        <span>Most Used Colors:</span>
+                        <div id="popularColors" class="color-chips"></div>
+                    </div>
+                    <div class="analytics-item">
+                        <span>Popular Fonts:</span>
+                        <div id="popularFonts" class="font-list"></div>
+                    </div>
+                    <div class="analytics-item">
+                        <span>Elements Count:</span>
+                        <span id="elementsCount">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <!-- Added jsPDF for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module" src="designer.js"></script>
+</body>
+
+</html>
